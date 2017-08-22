@@ -10,11 +10,13 @@ $('#makeRoom').click(function() {
 socket.on('showRoom', function(data){
     $('#chatroom').empty();
     for(var i=0; i< data.roomCount; i++) {
-        $('#chatroom').append($('<button>').text('room '+data.rooms.shift()));
+        $('#chatroom').append($('<button>').text('room '+data.rooms.shift()).click(function() {
+            window.open('/chat/'+$(this).text());
+        }));
     }
     console.log(data.roomCount);
 
-    $('#chatroom').click(function() {
-        window.open("/chat");
-    })
+  //  $('#chatroom').click(function() {
+  //      window.open("/chat/"+this.text);
+ //   })
 });

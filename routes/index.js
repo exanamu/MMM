@@ -5,12 +5,7 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
-router.get('/chat', function(req, res, next) {
-  res.render('chat');
-});
-
-app.get('/:room', function(req,res){
-    console.log('room name is :'+req.params.room);
+router.get('/chat/:room', function(req,res){
     res.render('chat', {room:req.params.room});
 });
 
