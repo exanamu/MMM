@@ -1,11 +1,14 @@
 html
     head
         title
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
+        script(src="/socket.io/socket.io.js")
         script(src="http://code.jquery.com/jquery-1.11.0.min.js")
     body
         <p><b>chat</b></p>
         input(type="text" id="msgbox")
         br
         span#msgs
-        script(type='text/javascript' src='/javascripts/chat.js')
+        script(type='text/javascript' src='/javascripts/project.js')
+        br
+        <p><b>draw</b></p>
+        span#drawContainer

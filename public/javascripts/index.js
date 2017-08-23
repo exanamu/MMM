@@ -1,4 +1,4 @@
-var socket=io.connect('http://127.0.0.1:3001');
+var socket= io('http://localhost:3001');
 
 socket.emit('showRoom');
 
@@ -10,8 +10,8 @@ $('#makeRoom').click(function() {
 socket.on('showRoom', function(data){
     $('#chatroom').empty();
     for(var i=0; i< data.roomCount; i++) {
-        $('#chatroom').append($('<button>').text('room '+data.rooms.shift()).click(function() {
-            window.open('/chat/'+$(this).text());
+        $('#chatroom').append($('<button>').text(data.rooms.shift()).click(function() {
+            window.open('/project/'+$(this).text());
         }));
     }
     console.log(data.roomCount);

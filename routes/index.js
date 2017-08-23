@@ -5,8 +5,8 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
-router.get('/chat/:room', function(req,res){
-    res.render('chat', {room:req.params.room});
+router.get('/project/:room', function(req,res){
+    res.render('project', {room:req.params.room});
 });
 
 module.exports= router;

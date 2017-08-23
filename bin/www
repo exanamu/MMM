@@ -25,10 +25,9 @@ var io= require('socket.io').listen(server);
 var rooms= [];
 var roomCount= 0;
 
-var nsChat= io.of('/chat');
-
 io.on('connection', function(socket) {
-    socket.on('makeRoom', function(data) {
+
+  socket.on('makeRoom', function(data) {
       var roomName= data;
 
       rooms[roomCount]= roomName;
@@ -38,26 +37,16 @@ io.on('connection', function(socket) {
    socket.on('showRoom', function(){
      socket.emit('showRoom', {"rooms": rooms, "roomCount": roomCount});
    });
-});
-
-var count= 0;
-
-nsChat.on('connection', function(socket){
-  console.log('connected');
 
   socket.on('joinroom', function(data){
+    console.log(data);
     socket.join(data.room);
-    socket.set('room', data.room, function(){
-      var room= data.room;
-    })
+    socket.room= data.room;
+    var room= data.room;
   });
 
   socket.on('fromclient', function(data){
-    socket.get('room', function(err, room){
-       io.sockets.in(room).emit('toclient',data);
-       //socket.emit('toclient',data);  
-       console.log('Message from client :'+data.msg);
-    })
+    io.sockets.in(socket.room).emit('toclient',data);
   });
 
 });
