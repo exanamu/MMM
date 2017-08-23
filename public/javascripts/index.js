@@ -9,14 +9,13 @@ $('#makeRoom').click(function() {
 
 socket.on('showRoom', function(data){
     $('#chatroom').empty();
+
+    var keys= Object.keys(data.rooms);
+
     for(var i=0; i< data.roomCount; i++) {
-        $('#chatroom').append($('<button>').text(data.rooms.shift()).click(function() {
+        $('#chatroom').append($('<button>').text(keys.shift()).click(function() {
             window.open('/project/'+$(this).text());
-        }));
+        }));  
     }
     console.log(data.roomCount);
-
-  //  $('#chatroom').click(function() {
-  //      window.open("/chat/"+this.text);
- //   })
 });

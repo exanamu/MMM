@@ -4,11 +4,12 @@ html
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous")
         script(src="/socket.io/socket.io.js")
-        script(type="text/javascript").
-            mxBasePath = 'javascript/src';
     body
+        <p><b>Make Room</b></p>
         input#roomName(value="roomname")
         #makeRoom
             button(style="width:100;height:20") Make Room
+        br
+        <p><b>Room</b><p>
         span#chatroom
         script(type='text/javascript' src='javascripts/index.js')

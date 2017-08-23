@@ -22,7 +22,7 @@ app.set('port', port);
 var server = http.createServer(app);
 var io= require('socket.io').listen(server);
 
-var rooms= [];
+var rooms= {};
 var roomCount= 0;
 
 io.on('connection', function(socket) {
@@ -30,23 +30,27 @@ io.on('connection', function(socket) {
   socket.on('makeRoom', function(data) {
       var roomName= data;
 
-      rooms[roomCount]= roomName;
-      roomCount++;
+      if(rooms[roomName]== undefined) {
+        rooms[roomName]= true;
+        roomCount++;
+      }
    });
 
    socket.on('showRoom', function(){
      socket.emit('showRoom', {"rooms": rooms, "roomCount": roomCount});
    });
 
-  socket.on('joinroom', function(data){
-    console.log(data);
+  socket.on('joinRoom', function(data){
     socket.join(data.room);
     socket.room= data.room;
-    var room= data.room;
   });
 
   socket.on('fromclient', function(data){
     io.sockets.in(socket.room).emit('toclient',data);
+  });
+
+  socket.on('disconnect',function(data) {
+
   });
 
 });

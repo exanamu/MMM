@@ -3,12 +3,18 @@ html
         title
         script(src="/socket.io/socket.io.js")
         script(src="http://code.jquery.com/jquery-1.11.0.min.js")
+        
     body
+        script(src="http://cdn.jsdelivr.net/mojs/latest/mo.min.js")
         <p><b>chat</b></p>
         input(type="text" id="msgbox")
         br
         span#msgs
-        script(type='text/javascript' src='/javascripts/project.js')
         br
         <p><b>draw</b></p>
         span#drawContainer
+        svg
+            text(x="20" y="40" style="fill:none; stroke: #000000") Something
+            text(x="20" y="60") Is it work?
+
+        script(type='text/javascript' src='/javascripts/project.js')
