@@ -41,8 +41,20 @@ io.on('connection', function(socket) {
    });
 
   socket.on('joinRoom', function(data){
-    socket.join(data.room);
-    socket.room= data.room;
+    // consider room exist
+    var keys= Object.keys(rooms);
+    var roomExist= false;
+
+    for(var i=0; i< roomCount; i++) {
+      if(data.room== keys.shift()) roomExist= true;
+    }
+    
+    if(roomExist== true) {
+      socket.join(data.room);
+      socket.room= data.room;
+    }
+    else
+      socket.emit('noRoom');
   });
 
   socket.on('fromclient', function(data){

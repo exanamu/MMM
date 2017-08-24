@@ -1,12 +1,15 @@
-
 var socket= io('http://localhost:3001');
 
-
 // parse room name
-var room = document.location.href.split("chat/").pop();
+var room = document.location.href.split("project/").pop();
 
 // enter room
 socket.emit('joinRoom', {room: room});
+
+// when has no room
+socket.on('noRoom', function() {
+    $('#msgbox').val('there are no room');
+})
 
 // chat
 $('#msgbox').keyup(function(event) {
@@ -29,3 +32,13 @@ $('#drawContainer').append(new mojs.Shape({
     fill: 'black',
     property : 'stagger( start, step )'
 }));
+
+// SVG handle
+addClickEvents();
+function addClickEvents() {
+    $('#text1').addEventListener('click', Clicked);
+}
+
+function Clicked(e) {
+    alert('oops');
+}
