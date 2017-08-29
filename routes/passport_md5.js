@@ -20,11 +20,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: '14jk225ocvisdifaf@#!',
   resave: false,
-  saveUninitialized: true.
+  saveUninitialized: true,
   store: new FileStore()
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.get('/welcome', function(req, res){
   if(req.user && req.user.displayName) {
     res.send(`

@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: '14jk225ocvisdifaf@#!',
   resave: false,
-  saveUninitialized: true.
+  saveUninitialized: true,
   store: new FileStore()
 }));
 app.use(passport.initialize());
