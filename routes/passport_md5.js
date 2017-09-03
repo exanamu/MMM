@@ -23,8 +23,10 @@ app.use(session({
   saveUninitialized: true,
   store: new FileStore()
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.get('/welcome', function(req, res){
   if(req.user && req.user.displayName) {
     res.send(`
