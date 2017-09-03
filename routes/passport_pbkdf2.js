@@ -12,16 +12,17 @@ var app = express();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var users = {
+var users = [{
   username: 'fortice',
-  password: '',
+  password: '1111',
   displayName: 'Fortice'
-};
+}];
+var count = 1;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: '14jk225ocvisdifaf@#!',
   resave: false,
-  saveUninitialized: true.
+  saveUninitialized: true,
   store: new FileStore()
 }));
 app.use(passport.initialize());
@@ -42,15 +43,38 @@ app.get('/welcome', function(req, res){
     `);
   }
 });
+app.get('/auth/register', function(req, res){
+  var output=`
+  <form action="/auth/register" method="post">
+    <h1> Login Test </h1>
+    <p>
+      <input type="text" name="username" placeholder="username">
+    </p>
+    <p>
+      <input type="text" name="displayName" placehoder = "nickname">
+    </p>
+    <p>
+      <input type="password" name="password" placehoder = "password">
+    </p>
+    <p>
+      <input type="submit" name="submit" value="제출하기">
+    </p>
+  </form>
+  `;
+  res.send(output);
+})
 app.post('/auth/register', function(req, res){
-  hasher({passowrd:req.body.password}, function(err, pass, salt, hash){
-    var user = {
-      id : req.body.id,
+  hasher({password:req.body.password}, function(err, pass, salt, hash){
+    user = {
+      username : req.body.username,
       password : hash,
       salt:salt,
       displayName : req.body.displayName
     };
-    user.push(user);
+    users.push(user);
+    console.log(count + users[count].username);
+    console.log("regist : " + user.password + " " + req.body.password);
+    count++;
     req.session.displayName = req.body.displayName;
     req.session.save(function(){
       res.redirect('/welcome');
@@ -92,23 +116,20 @@ passport.deserializeUser(function(id, done) { // 매개변수 user는 serializeU
 passport.use(new LocalStrategy(
   function(username, password, done) {
     var uname = username;
-    var pwd = md5(password + users.salt);
-    if(users.username == uname){
-      return hasher(opts, function(err, pass, salt, hash){
-        // pass : 비밀번호 , salt : 섞는 값, hash : 암호화 후 비밀번호
-        // if(users.password == hash){
-        //   req.session.displayName = users.displayName;
-        //   req.session.save(function(){
-        //     req.redirect('/welcome');
-        //   })
-        // } else{
-        //   res.send('Who are you')
-        // }
-      });
-      done(null, users);
-    }
-    else{
-      done(null, false);
+    var pwd = password;
+    for(i = 0; i < count; i++){
+      console.log(i + "번째" + users[i].username + " and " + uname);
+      if(users[i].username==uname){
+        return hasher({password:pwd, salt:users[i].salt}, function(err, pass, salt, hash){
+          // pass : 비밀번호 , salt : 섞는 값, hash : 암호화 후 비밀번호
+          console.log(users[i].password + " " + hash);
+          console.log(pwd + " " + pass);
+          if(users[i].password == hash){
+            console.log("login success");
+            done(null, users[i]);
+          }
+        });
+      }
     }
     done(null, false);
   }

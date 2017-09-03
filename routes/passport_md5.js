@@ -13,14 +13,14 @@ var LocalStrategy = require('passport-local').Strategy;
 var users = {
   username: 'fortice',
   password: 'd2116f3601c89a93a9ebc42069167507',
-  salt = '$@#NON@O#N1231go($##)',
+  salt : '$@#NON@O#N1231go($##)',
   displayName: 'Fortice'
 };
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
   secret: '14jk225ocvisdifaf@#!',
   resave: false,
-  saveUninitialized: true.
+  saveUninitialized: true,
   store: new FileStore()
 }));
 app.use(passport.initialize());
