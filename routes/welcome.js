@@ -5,102 +5,55 @@ var FileStore = require('session-file-store')(session);
 var bkfd2Password = require('pbkdf2-password');
 var hasher = bkfd2Password();
 var assert = require('assert');
-var opts = {
-  password : "want" // 암호화하고싶은 패스워드
-}
+
 var app = express();
+var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var users = [{
   username: 'fortice',
   password: '1111',
-  displayName: 'Fortice'
+  nickname: 'Fortice'
 }];
 var count = 1;
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({
+
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(session({
   secret: '14jk225ocvisdifaf@#!',
   resave: false,
   saveUninitialized: true,
   store: new FileStore()
 }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.get('/welcome', function(req, res){
-  if(req.user && req.user.displayName) {
-    res.send(`
-      <h1>Hello, ${req.user.displayName}</h1>
-      <a href="/auth/logout">logout</a>
-    `);
-  } else{
-    res.send(`
-      <h1>Welcome</h1>
-      <ul>
-        <li><a href="/auth/login">Loogin</a></li>
-        <li><a href="/auth/register">Register</a></li>
-      </ul>
-    `);
-  }
-});
-app.get('/auth/register', function(req, res){
-  var output=`
-  <form action="/auth/register" method="post">
-    <h1> Login Test </h1>
-    <p>
-      <input type="text" name="username" placeholder="username">
-    </p>
-    <p>
-      <input type="text" name="displayName" placehoder = "nickname">
-    </p>
-    <p>
-      <input type="password" name="password" placehoder = "password">
-    </p>
-    <p>
-      <input type="submit" name="submit" value="제출하기">
-    </p>
-  </form>
-  `;
-  res.send(output);
+router.use(passport.initialize());
+router.use(passport.session());
+router.get('/auth/register', function(req, res, next){
+  res.render('register');
 })
-app.post('/auth/register', function(req, res){
+router.post('/auth/register', function(req, res, next){
   hasher({password:req.body.password}, function(err, pass, salt, hash){
     user = {
       username : req.body.username,
       password : hash,
       salt:salt,
-      displayName : req.body.displayName
+      nickname : req.body.nickname
     };
     users.push(user);
     console.log(count + users[count].username);
     console.log("regist : " + user.password + " " + req.body.password);
     count++;
-    req.session.displayName = req.body.displayName;
+    req.session.nickname = req.body.nickname;
     req.session.save(function(){
-      res.redirect('/welcome');
+      res.render('welcome');
     });
   });
 });
-app.get('/auth/logout', function(req, res){
+router.get('/auth/logout', function(req, res, next){
   req.logout();
-  res.redirect('/welcome');
+  res.render('welcome');
 });
-app.get('/auth/login', function(req, res){
-  var output=`
-  <form action="/auth/login" method="post">
-    <h1> Login Test </h1>
-    <p>
-      <input type="text" name="username" placeholder="username">
-    </p>
-    <p>
-      <input type="password" name="password" placehoder = "password">
-    </p>
-    <p>
-      <input type="submit" name="submit" value="제출하기">
-    </p>
-  </form>
-  `;
-  res.send(output);
+router.get('/auth/login', function(req, res, next){
+  res.render('login')
 })
 passport.serializeUser(function(user, done) { // Strategy 성공 시 호출됨
   console.log('serializeUser', user);
@@ -134,7 +87,7 @@ passport.use(new LocalStrategy(
     done(null, false);
   }
 ))
-app.post('/auth/login',
+router.post('/auth/login',
 passport.authenticate('local',{
         successRedirect: '/welcome',
         failureRedirect: '/auth/login',
@@ -142,6 +95,4 @@ passport.authenticate('local',{
       }
 ))
 
-app.listen(3003, function(){
-  console.log('Connected 3003 session');
-});
+module.exports = router;
