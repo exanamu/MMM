@@ -10,13 +10,4 @@ router.get('/chat', function(req, res, next) {
   res.render('chat');
 });
 
-router.get('/welcome', function(req, res, next){
-  if(req.user && req.user.displayName) {
-    //res.render('play');
-  } else{
-    res.render('welcome');
-  }
-})
-
-
 module.exports= router;
